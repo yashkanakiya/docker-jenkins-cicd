@@ -1,24 +1,38 @@
 pipeline {
-    agent none  
+    agent any
     
     stages {
-        stage('Checkout Code') {
-            agent any  
+        stage('Checkout') {
             steps {
                 checkout scm
             }
         }
-        stage('Build and Run') {
-            agent {
-                label 'built-in'  
-            }
+        stage('Build Docker Image') {
             steps {
-                sh '''
-                docker build -t flask-app .
-                docker rm -f flask-app || true
-                docker run -d -p 5000:5000 --name flask-app flask-app
-                '''
+                script {
+                    dockerImage = docker.build("flask-app:${BUILD_ID}")
+                }
             }
+        }
+        stage('Run Container') {
+            steps {
+                script {
+                    // Stop and remove if exists
+                    sh 'docker rm -f flask-app || true'
+                    
+                    // Run new container
+                    dockerImage.run(
+                        "--name flask-app -p 5000:5000 -d"
+                    )
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            echo 'Cleaning up...'
+            sh 'docker rm -f flask-app || true'
         }
     }
 }
