@@ -1,23 +1,22 @@
 pipeline {
-    agent {
-       label 'docker'
-    }
+    agent none  
+    
     stages {
-         stage('Checkout Code') {
+        stage('Checkout Code') {
+            agent any  
             steps {
                 checkout scm
             }
         }
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t flask-app .'
+        stage('Build and Run') {
+            agent {
+                label 'built-in'  
             }
-        }
-        stage('Run Docker Container') {
             steps {
                 sh '''
+                docker build -t flask-app .
                 docker rm -f flask-app || true
-                docker run -d -p 5000:5000 flask-app --name flask-app
+                docker run -d -p 5000:5000 --name flask-app flask-app
                 '''
             }
         }
