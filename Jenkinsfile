@@ -11,30 +11,26 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    dockerImage = docker.build("flask-app:latest")
-                }
+                sh 'docker build -t flask-app:latest .'
             }
         }
 
         stage('Deploy Container') {
             steps {
-                script {
-                    sh '''
-                    docker rm -f flask-app || true
-                    docker run -d \
-                      --name flask-app \
-                      -p 5000:5000 \
-                      flask-app:latest
-                    '''
-                }
+                sh '''
+                docker rm -f flask-app || true
+                docker run -d \
+                  --name flask-app \
+                  -p 5000:5000 \
+                  flask-app:latest
+                '''
             }
         }
     }
 
     post {
         success {
-            echo "Application deployed successfully 🚀"
+            echo "Flask app deployed successfully 🚀"
         }
         failure {
             echo "Build failed ❌"
