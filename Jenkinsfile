@@ -1,7 +1,17 @@
 pipeline {
-    agent any
-
+    agent {
+        docker {
+            image 'docker:latest'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
+        }
+    }
+    
     stages {
+        stage('Checkout Code') {
+            steps {
+                checkout scm
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 sh 'docker build -t flask-app .'
@@ -18,4 +28,3 @@ pipeline {
         }
     }
 }
-
