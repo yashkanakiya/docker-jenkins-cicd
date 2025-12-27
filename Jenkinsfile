@@ -2,16 +2,15 @@ pipeline {
     agent any
 
     stages {
-
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                checkout scm
+                git 'https://github.com/your-username/docker-jenkins-cicd.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t flask-app:latest .'
+                sh 'docker build -t flask-app .'
             }
         }
 
@@ -19,21 +18,9 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f flask-app || true
-                docker run -d \
-                  --name flask-app \
-                  -p 5000:5000 \
-                  flask-app:latest
+                docker run -d -p 5000:5000 --name flask-app flask-app
                 '''
             }
-        }
-    }
-
-    post {
-        success {
-            echo "Flask app deployed successfully 🚀"
-        }
-        failure {
-            echo "Build failed ❌"
         }
     }
 }
