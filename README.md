@@ -177,7 +177,8 @@ pipeline {
 ```
 Definition → Pipeline script from SCM
 SCM → Git
-Repository URL → https://github.com/yourname/yourrepo.git
+Repository URL → https://github.com/yashkanakiya/docker-jenkins-cicd
+.git
 Branch → */main
 Script Path → Jenkinsfile
 ```
