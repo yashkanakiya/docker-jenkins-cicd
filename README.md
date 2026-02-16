@@ -199,7 +199,7 @@ http://localhost:5000
 
 ---
 
-## 🧠 Common Errors & Fixes (Interview Gold)
+## 🧠 Common Errors & Fixes
 
 | Error                     | Cause                           | Solution                     |
 | ------------------------- | ------------------------------- | ---------------------------- |
